@@ -9,9 +9,9 @@ namespace WalletCore.Model.Database
 
         public Owner Owner { get; set; }
 
-        public double Avaliable { get; set; }
+        public double MoneyAvailable { get; set; }
 
-        public double Invested { get; set; }
+        public double MoneyInvested { get; set; }
 
         public List<Share> Shares { get; set; }
     }

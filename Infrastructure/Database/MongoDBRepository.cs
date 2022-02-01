@@ -35,16 +35,16 @@ namespace Infrastructure.Database
         {
             var collection = GetCollection<TDocument>();
 
-            var result = await collection.FindAsync(filter, options);
-
+            var  result = await collection.FindAsync(filter, options);
+            
             return result.ToEnumerable();
         }
 
-        public async Task UpdateAsync<TDocument>(Expression<Func<TDocument, bool>> condition, UpdateDefinition<TDocument> update)
+        public async Task UpdateAsync<TDocument>(Expression<Func<TDocument, bool>> condition, TDocument data)
         {
             var collection = GetCollection<TDocument>();
 
-            await collection.UpdateOneAsync(condition, update);
+            await collection.ReplaceOneAsync(condition, data);
         }
     }
 }

@@ -1,0 +1,9 @@
+﻿using System.Threading.Tasks;
+
+namespace WalletCore.Interface.Action
+{
+    public interface IAddMoneyAvailableAction
+    {
+        public Task ExecuteAsync(long cpf, double newMoney);
+    }
+}

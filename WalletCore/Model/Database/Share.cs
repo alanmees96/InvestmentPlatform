@@ -1,11 +1,12 @@
 ﻿namespace WalletCore.Model.Database
 {
-    public class Share
+    public class Share : ShareBase
     {
-        public string Symbol { get; set; }
-
-        public int Amount { get; set; }
-
-        public double PurchasePrice { get; set; }
+        public Share(ShareBase share) : base(share)
+        {
+        }
+        public Share()
+        {
+        }
     }
 }

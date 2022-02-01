@@ -12,6 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WalletCore.Action;
+using WalletCore.Infrastructure;
+using WalletCore.Interface;
+using WalletCore.Interface.Action;
 
 namespace WalletAPI
 {
@@ -28,6 +32,11 @@ namespace WalletAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IDatabase, MongoDBRepository>(x => new MongoDBRepository("mongodb+srv://ToroInvestimento:gTS34bx5B7szNXqf@toroteste.z1llg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", "Toro"));
+            services.AddSingleton<IWalletDatabase, WalletDatabase>();
+
+
+            services.AddSingleton<IBuyShareAction, BuyShareAction>();
+            services.AddSingleton<IAddMoneyAvailableAction, AddMoneyAvailableAction>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalletAPI.Model;
+using WalletCore.Action;
+using WalletCore.Infrastructure;
+using WalletCore.Model.Action;
+using WalletCore.Model.Database;
 
 namespace WalletAPI.Controllers
 {
@@ -49,24 +53,24 @@ namespace WalletAPI.Controllers
 
         private async Task AddBuyShare(long cpf, Share newShare)
         {
-            var wallet = await FindWallet(cpf);
+            //var wallet = await FindWallet(cpf);
 
-            wallet.Shares.Add(newShare);
+            //wallet.Shares.Add(newShare);
 
-            var total = newShare.Amount * newShare.PurchasePrice;
+            //var total = newShare.Amount * newShare.PurchasePrice;
 
-            wallet.Avaliable -= total;
-            wallet.Invested += total;
+            //wallet.Avaliable -= total;
+            //wallet.Invested += total;
 
-            wallet.Shares.Add(newShare);
+            //wallet.Shares.Add(newShare);
 
-            var collection = _database.GetCollection<Wallet>();
+            //var collection = _database.GetCollection<Wallet>();
 
-            var update = Builders<Wallet>.Update.Set(x => x.Avaliable, wallet.Avaliable);
-            update = update.Set(x => x.Invested, wallet.Invested);
-            update = update.Set(x => x.Shares, wallet.Shares);
+            //var update = Builders<Wallet>.Update.Set(x => x.Avaliable, wallet.Avaliable);
+            //update = update.Set(x => x.Invested, wallet.Invested);
+            //update = update.Set(x => x.Shares, wallet.Shares);
 
-            await collection.UpdateOneAsync(x => x._id == wallet._id, update);
+            //await collection.UpdateOneAsync(x => x._id == wallet._id, update);
         }
 
         [HttpGet]
@@ -82,7 +86,20 @@ namespace WalletAPI.Controllers
                 PurchasePrice = 40.77
             };
 
-            await AddBuyShare(cpf, newShare);
+            var newShares = new BuyShare()
+            {
+                Symbol = "SANB11",
+                Amount = 3,
+                PurchasePrice = 40.77
+            };
+
+            //await AddBuyShare(cpf, newShare);
+
+            var wallDB = new WalletDatabase(_database);
+
+            var teste = new BuyShareAction(wallDB);
+
+            await teste.ExecuteAsync(newShares, cpf);
 
             //return sharesTrend.FirstOrDefault();
             return default;

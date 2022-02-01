@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace WalletAPI.Model
 {
-    public class Owner
+    public class AddMoneyPayload
     {
         public long CPF { get; set; }
 
-        public string Name { get; set; }
+        public double value { get; set; }
     }
 }

@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WalletCore.Interface;
 using WalletCore.Model.Database;
 
 namespace WalletCore.Infrastructure
 {
-    public class WalletDatabase
+    public class WalletDatabase : IWalletDatabase
     {
         private readonly IDatabase _database;
 
@@ -18,17 +19,18 @@ namespace WalletCore.Infrastructure
             _database = database;
         }
 
-        public void UpdateWallet(Wallet wallet, long cpf)
+        public async Task<Wallet> FindByCPFAsync(long cpf)
         {
-            var update = Builders<Wallet>.Update.Set(x => x.Avaliable, wallet.Avaliable);
-            update = update.Set(x => x.Invested, wallet.Invested);
-            update = update.Set(x => x.Shares, wallet.Shares);
+            var filter = Builders<Wallet>.Filter.Eq(x => x.Owner.CPF, cpf);
 
-            var teste = _database.GetCollection<Wallet>();
+            var wallets = await _database.FindAsync(filter);
 
-            teste.ReplaceOne()
+            return wallets.FirstOrDefault();
+        }
 
-            _database.UpdateAsync(x => x.Owner.CPF.Equals(cpf), update);
+        public async Task UpdateAsync(Wallet wallet)
+        {
+            await _database.UpdateAsync(x => x.Owner.CPF.Equals(wallet.Owner.CPF), wallet);
         }
     }
 }

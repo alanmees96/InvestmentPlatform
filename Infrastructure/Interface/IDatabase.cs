@@ -14,6 +14,6 @@ namespace Infrastructure.Interface
 
         public IMongoCollection<TDocument> GetCollection<TDocument>();
 
-        public Task UpdateAsync<TDocument>(Expression<Func<TDocument, bool>> condition, UpdateDefinition<TDocument> update);
+        public Task UpdateAsync<TDocument>(Expression<Func<TDocument, bool>> condition, TDocument data);
     }
 }
