@@ -1,14 +1,11 @@
 ﻿using InvestmentWebPlatform.Models;
 using InvestmentWebPlatform.Models.Wallet;
 using InvestmentWebPlatform.ViewModel;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -17,13 +14,46 @@ namespace InvestmentWebPlatform.Controllers
 {
     public class WalletController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public WalletController(UserManager<ApplicationUser> userManager)
+        private async Task<ActionResult> WalletResponseDefineView<T>(T payload, HttpResponseMessage walletResponseMessage)
         {
-            _userManager = userManager;
+            var contentAsText = await walletResponseMessage.Content.ReadAsStringAsync();
+
+            var jsonOptions = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var walletResponse = JsonSerializer.Deserialize<WalletResponse>(contentAsText, jsonOptions);
+
+            switch (walletResponseMessage.StatusCode)
+            {
+                case HttpStatusCode.OK:
+                    TempData["AlertMessageType"] = "success";
+                    TempData["AlertMessageContent"] = "Saldo adicionado com sucesso!";
+
+                    return RedirectToAction(nameof(Index), "Home");
+
+                case HttpStatusCode.NotFound:
+                    TempData["AlertMessageType"] = "error";
+                    TempData["AlertMessageContent"] = walletResponse.Message;
+
+                    return View(payload);
+
+                case HttpStatusCode.BadRequest:
+                    TempData["AlertMessageType"] = "error";
+                    TempData["AlertMessageContent"] = walletResponse.Message;
+
+                    return View(payload);
+
+                default:
+                    TempData["AlertMessageType"] = "error";
+                    TempData["AlertMessageContent"] = "Retorno inesperado";
+
+                    return View(payload);
+            }
         }
 
+        private readonly UserManager<ApplicationUser> _userManager;
 
         // GET: WalletController/Create
         public async Task<ActionResult> AddCashAsync()
@@ -42,15 +72,12 @@ namespace InvestmentWebPlatform.Controllers
         // POST: WalletController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddCashAsync(AddCashViewModel collection)
+        public async Task<ActionResult> AddCashAsync(AddCashViewModel payload)
         {
-
-            //var currentUser = await _userManager.GetUserAsync(User);
-
             var addCash = new AddMoneyPayload()
             {
-                CPF = collection.CPF,
-                Value = collection.Value
+                CPF = payload.CPF,
+                Value = payload.Value
             };
 
             var addCashJson = JsonSerializer.Serialize(addCash);
@@ -64,18 +91,18 @@ namespace InvestmentWebPlatform.Controllers
 
             var url = "http://localhost:5001/Wallet/AddMoney";
 
-            var response = await client.PostAsync(url, addCashContent);
-
             try
             {
-                TempData["AlertMessageType"] = "success";
-                TempData["AlertMessageContent"] = "Saldo adicionado com sucesso!";
+                var response = await client.PostAsync(url, addCashContent);
 
-                return RedirectToAction(nameof(Index), "Home");
+                return await WalletResponseDefineView(payload, response);
             }
             catch
             {
-                return View();
+                TempData["AlertMessageType"] = "error";
+                TempData["AlertMessageContent"] = "Instabilidade no sistema entre em contato com nosso suporte.";
+
+                return View(payload);
             }
         }
 
@@ -115,19 +142,24 @@ namespace InvestmentWebPlatform.Controllers
 
             var url = "http://localhost:5001/Wallet/AddShare";
 
-            var response = await client.PostAsync(url, newShareJson);
-
-            //if(response.IsSuccessStatusCode)
-
             try
             {
-                return RedirectToAction(nameof(Index), "Home");
+                var response = await client.PostAsync(url, newShareJson);
+
+                return await WalletResponseDefineView(payload, response);
             }
             catch
             {
-                return View();
+                TempData["AlertMessageType"] = "error";
+                TempData["AlertMessageContent"] = "Instabilidade no sistema entre em contato com nosso suporte.";
+
+                return View(payload);
             }
         }
 
+        public WalletController(UserManager<ApplicationUser> userManager)
+        {
+            _userManager = userManager;
+        }
     }
 }

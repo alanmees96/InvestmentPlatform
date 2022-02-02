@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using WalletCore.Interface;
 using WalletCore.Interface.Action;
+using WalletCore.Model.Response;
 
 namespace WalletCore.Action
 {
@@ -13,18 +14,20 @@ namespace WalletCore.Action
             _walletDatabase = walletDatabase;
         }
 
-        public async Task ExecuteAsync(string cpf, double newMoney)
+        public async Task<ActionResponse> ExecuteAsync(string cpf, double newMoney)
         {
             var wallet = await _walletDatabase.FindByCPFAsync(cpf);
 
             if (wallet == default)
             {
-                return; // TODO Carteira não encontrada
+                return new ErrorResponse(ErrorCode.WalletNotFound);
             }
 
             wallet.MoneyAvailable += newMoney;
 
             await _walletDatabase.UpdateAsync(wallet);
+
+            return new DontHaveError();
         }
     }
 }

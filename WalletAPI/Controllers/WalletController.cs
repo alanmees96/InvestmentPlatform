@@ -51,9 +51,19 @@ namespace WalletAPI.Controllers
 
         [HttpPost]
         [Route("AddMoney")]
-        public async Task AddMoneyPost(AddMoneyPayload payload)
+        public async Task<ObjectResult> AddMoneyPost(AddMoneyPayload payload)
         {
-            await _addMoneyAvailableAction.ExecuteAsync(payload.CPF, payload.Value);
+            var actionResponse = await _addMoneyAvailableAction.ExecuteAsync(payload.CPF, payload.Value);
+
+            if (actionResponse.HasError)
+            {
+                if (actionResponse.ErrorCode == (int)ErrorCode.WalletNotFound)
+                {
+                    return NotFound(actionResponse);
+                }
+            }
+
+            return Ok(actionResponse);
         }
 
         [HttpPost]
