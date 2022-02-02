@@ -31,10 +31,16 @@ namespace WalletCore.Action
             return share;
         }
 
-        private void UpdateShare(Share share, BuyShare newShare)
+        private void CalculateAVGPrice(Share share, BuyShare newShare)
         {
-            var avgPrice = ((share.Quantity * share.PurchasePrice) + (newShare.Quantity * newShare.PurchasePrice)) / (share.Quantity + newShare.Quantity);
+            var currentTotalShareValue = share.Quantity * share.PurchasePrice;
+            var purchaseTotalShareValue = newShare.Quantity * newShare.PurchasePrice;
 
+            var totalQuantityOperation = share.Quantity + newShare.Quantity;
+
+            var avgPrice = (currentTotalShareValue + purchaseTotalShareValue) / totalQuantityOperation;
+
+            
             share.Quantity += newShare.Quantity;
             share.PurchasePrice = avgPrice;
         }
@@ -49,10 +55,18 @@ namespace WalletCore.Action
 
                 wallet.Shares.Add(share);
 
+                wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
+
                 return;
             }
 
-            UpdateShare(share, newShare);
+            var currentTotalShareValue = share.Quantity * share.PurchasePrice;
+
+            wallet.MoneyInvested -= currentTotalShareValue;
+
+            CalculateAVGPrice(share, newShare);
+
+            wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
         }
 
         public async Task ExecuteAsync(BuyShare newShare, string cpf)
@@ -63,6 +77,15 @@ namespace WalletCore.Action
             {
                 return; // TODO Carteira não encontrada
             }
+
+            var purchaseTotalShareValue = newShare.Quantity * newShare.PurchasePrice;
+
+            if(purchaseTotalShareValue > wallet.MoneyAvailable)
+            {
+                return;// TODO saldo insuficiente
+            }
+
+            wallet.MoneyAvailable -= purchaseTotalShareValue;
 
             CalculateShare(wallet, newShare);
 
