@@ -64,6 +64,7 @@ namespace InvestmentWebPlatform.Controllers
                     CPF = model.CPF,
                     UserName = model.Email,
                     Email = model.Email,
+                    EmailConfirmed = true
                 };
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

@@ -1,9 +1,6 @@
 ﻿using Infrastructure.Interface;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WalletCore.Interface;
 using WalletCore.Model.Database;
@@ -19,9 +16,9 @@ namespace WalletCore.Infrastructure
             _database = database;
         }
 
-        public async Task<Wallet> FindByCPFAsync(string cpf)
+        public async Task<Wallet> FindByAccountNumberAsync(string accountNumber)
         {
-            var filter = Builders<Wallet>.Filter.Eq(x => x.Owner.CPF, cpf);
+            var filter = Builders<Wallet>.Filter.Eq(x => x.Owner.AccountNumber, accountNumber);
 
             var wallets = await _database.FindAsync(filter);
 
@@ -30,7 +27,7 @@ namespace WalletCore.Infrastructure
 
         public async Task UpdateAsync(Wallet wallet)
         {
-            await _database.UpdateAsync(x => x.Owner.CPF.Equals(wallet.Owner.CPF), wallet);
+            await _database.UpdateAsync(x => x.Owner.AccountNumber.Equals(wallet.Owner.AccountNumber), wallet);
         }
 
         public async Task InsertAsync(Wallet wallet)

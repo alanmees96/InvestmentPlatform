@@ -8,6 +8,9 @@ namespace WalletCore.Model.Response
         WalletNotFound = 1,
 
         [Description("Saldo insuficiente")]
-        InsufficientFunds = 2
+        InsufficientFunds = 2,
+
+        [Description("CPF de origem diferente do destinatário")]
+        TransferCPFDoesntMatch = 3
     }
 }

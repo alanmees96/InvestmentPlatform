@@ -70,9 +70,9 @@ namespace WalletCore.Action
             wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
         }
 
-        public async Task<ActionResponse> ExecuteAsync(BuyShare newShare, string cpf)
+        public async Task<ActionResponse> ExecuteAsync(BuyShare newShare, string accountNumber)
         {
-            var wallet = await _walletDatabase.FindByCPFAsync(cpf);
+            var wallet = await _walletDatabase.FindByAccountNumberAsync(accountNumber);
 
             if(wallet == default)
             {

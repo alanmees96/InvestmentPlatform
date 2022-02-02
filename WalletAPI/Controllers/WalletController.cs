@@ -31,7 +31,7 @@ namespace WalletAPI.Controllers
         {
             var newShare = new BuyShare(payload);
 
-            var actionResponse = await _buyShareAction.ExecuteAsync(newShare, payload.CPF);
+            var actionResponse = await _buyShareAction.ExecuteAsync(newShare, payload.AccountNumber);
 
             if (actionResponse.HasError)
             {
@@ -53,7 +53,7 @@ namespace WalletAPI.Controllers
         [Route("AddMoney")]
         public async Task<ObjectResult> AddMoneyPost(AddMoneyPayload payload)
         {
-            var actionResponse = await _addMoneyAvailableAction.ExecuteAsync(payload.CPF, payload.Value);
+            var actionResponse = await _addMoneyAvailableAction.ExecuteAsync(payload);
 
             if (actionResponse.HasError)
             {
@@ -70,7 +70,14 @@ namespace WalletAPI.Controllers
         [Route("Create")]
         public async Task CreateWalletPost(CreateWalletPayload payload)
         {
-            await _createWalletAction.ExecuteAsync(payload.Name, payload.CPF);
+            var walletPayload = new CreateWallet()
+            {
+                AccountNumber = payload.AccountNumber,
+                CPF = payload.CPF,
+                Name = payload.Name
+            };
+
+            await _createWalletAction.ExecuteAsync(walletPayload);
         }
     }
 }

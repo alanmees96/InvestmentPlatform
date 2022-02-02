@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WalletCore.Model.Action.AddMoneyAvailable;
 
 namespace WalletAPI.Model
 {
-    public class AddMoneyPayload
+    public class AddMoneyPayload : WalletTransferMoneyInfo
     {
-        public string CPF { get; set; }
-
-        public double Value { get; set; }
     }
 }

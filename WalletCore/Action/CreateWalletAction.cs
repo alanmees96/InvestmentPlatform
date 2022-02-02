@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using WalletCore.Interface;
 using WalletCore.Interface.Action;
+using WalletCore.Model.Action;
 using WalletCore.Model.Database;
 
 namespace WalletCore.Action
@@ -15,14 +16,15 @@ namespace WalletCore.Action
             _walletDatabase = walletDatabase;
         }
 
-        public async Task ExecuteAsync(string name, string cpf)
+        public async Task ExecuteAsync(CreateWallet walletPayload)
         {
             var newWallet = new Wallet()
             {
                 Owner = new Owner()
                 {
-                    CPF = cpf,
-                    Name = name
+                    CPF = walletPayload.CPF,
+                    Name = walletPayload.Name,
+                    AccountNumber = walletPayload.Name
                 },
                 Shares = new List<Share>()
             };
