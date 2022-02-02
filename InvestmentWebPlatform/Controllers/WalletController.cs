@@ -1,6 +1,7 @@
 ﻿using InvestmentWebPlatform.Models;
 using InvestmentWebPlatform.Models.Wallet;
 using InvestmentWebPlatform.Models.Wallet.AddMoneyPayload;
+using InvestmentWebPlatform.Service;
 using InvestmentWebPlatform.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -55,8 +56,8 @@ namespace InvestmentWebPlatform.Controllers
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly WalletService _walletService;
 
-        // GET: WalletController/Create
         public async Task<ActionResult> AddCashAsync()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -69,7 +70,6 @@ namespace InvestmentWebPlatform.Controllers
             return View(cashView);
         }
 
-        // POST: WalletController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddCashAsync(AddCashViewModel payload)
@@ -92,20 +92,9 @@ namespace InvestmentWebPlatform.Controllers
                 Amount = payload.Value
             };
 
-            var addCashJson = JsonSerializer.Serialize(addCash);
-
-            var addCashContent = new StringContent(
-                addCashJson,
-                Encoding.UTF8,
-                "application/json");
-
-            var client = new HttpClient();
-
-            var url = "http://localhost:5001/Wallet/AddMoney";
-
             try
             {
-                var response = await client.PostAsync(url, addCashContent);
+                var response = await _walletService.AddMoneyAsync(addCash);
 
                 var successMessage = "Saldo adicionado com sucesso!";
 
@@ -120,7 +109,6 @@ namespace InvestmentWebPlatform.Controllers
             }
         }
 
-        // GET: WalletController/Edit/5
         public ActionResult AddShare(string symbol, double price)
         {
             var viewModel = new AddShareViewModel()
@@ -132,7 +120,6 @@ namespace InvestmentWebPlatform.Controllers
             return View(viewModel);
         }
 
-        // POST: WalletController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddShareAsync(AddShareViewModel payload)
@@ -147,18 +134,9 @@ namespace InvestmentWebPlatform.Controllers
                 PurchasePrice = payload.Price
             };
 
-            var newShareJson = new StringContent(
-                JsonSerializer.Serialize(newShare),
-                Encoding.UTF8,
-                "application/json");
-
-            var client = new HttpClient();
-
-            var url = "http://localhost:5001/Wallet/AddShare";
-
             try
             {
-                var response = await client.PostAsync(url, newShareJson);
+                var response = await _walletService.AddShareAsync(newShare);
 
                 var successMessage = $"Ação {payload.Symbol} comparada com sucesso!";
 
@@ -173,9 +151,10 @@ namespace InvestmentWebPlatform.Controllers
             }
         }
 
-        public WalletController(UserManager<ApplicationUser> userManager)
+        public WalletController(UserManager<ApplicationUser> userManager, WalletService walletService)
         {
             _userManager = userManager;
+            _walletService = walletService;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using InvestmentWebPlatform.Models;
 using InvestmentWebPlatform.Models.Wallet;
+using InvestmentWebPlatform.Service;
 using InvestmentWebPlatform.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -17,13 +18,18 @@ namespace InvestmentWebPlatform.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly WalletService _walletService;
+
         public AccountController(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            WalletService walletService)
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+            _userManager = userManager;
+            _signInManager = signInManager;
+
+            _walletService = walletService;
         }
 
         [HttpGet]
@@ -41,16 +47,7 @@ namespace InvestmentWebPlatform.Controllers
                 AccountNumber = user.AccountNumber.ToString()
             };
 
-            var newShareJson = new StringContent(
-                JsonSerializer.Serialize(wallet),
-                Encoding.UTF8,
-                "application/json");
-
-            var client = new HttpClient();
-
-            var url = "http://localhost:5001/Wallet/Create";
-
-            await client.PostAsync(url, newShareJson);
+            await _walletService.AddNewWalletAsync(wallet);
         }
 
         [HttpPost]
@@ -68,10 +65,10 @@ namespace InvestmentWebPlatform.Controllers
                     EmailConfirmed = true
                 };
 
-                var result = await userManager.CreateAsync(user, model.Password);
+                var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, isPersistent: false);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
 
                     await CreateWallet(user);
 
@@ -88,7 +85,7 @@ namespace InvestmentWebPlatform.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
 
             return RedirectToAction("Index", "Home");
         }
@@ -106,26 +103,26 @@ namespace InvestmentWebPlatform.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null && !user.EmailConfirmed)
                 {
                     ModelState.AddModelError("message", "Email not confirmed yet");
                     return View(model);
 
                 }
-                if (await userManager.CheckPasswordAsync(user, model.Password) == false)
+                if (await _userManager.CheckPasswordAsync(user, model.Password) == false)
                 {
                     ModelState.AddModelError("message", "Invalid credentials");
                     return View(model);
 
                 }
 
-                var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
 
 
                 if (result.Succeeded)
                 {
-                    await userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));
+                    await _userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));
                     
                     return RedirectToAction("Index", "Home");
                 }

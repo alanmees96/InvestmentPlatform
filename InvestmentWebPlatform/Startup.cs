@@ -1,5 +1,6 @@
 using InvestmentWebPlatform.Data;
 using InvestmentWebPlatform.Models;
+using InvestmentWebPlatform.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -38,6 +39,9 @@ namespace InvestmentWebPlatform
             services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddHttpClient<StockExchangeService>();
+            services.AddHttpClient<WalletService>();
 
             services.AddControllersWithViews();
             services.AddMvc();
