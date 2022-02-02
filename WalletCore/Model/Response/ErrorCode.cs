@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace WalletCore.Model.Error
+namespace WalletCore.Model.Response
 {
     public enum ErrorCode
     {
