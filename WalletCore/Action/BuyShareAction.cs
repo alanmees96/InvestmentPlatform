@@ -23,7 +23,7 @@ namespace WalletCore.Action
         {
             var share = new Share()
             {
-                Amount = newShare.Amount,
+                Quantity = newShare.Quantity,
                 PurchasePrice = newShare.PurchasePrice,
                 Symbol = newShare.Symbol
             };
@@ -33,9 +33,9 @@ namespace WalletCore.Action
 
         private void UpdateShare(Share share, BuyShare newShare)
         {
-            var avgPrice = ((share.Amount * share.PurchasePrice) + (newShare.Amount * newShare.PurchasePrice)) / (share.Amount + newShare.Amount);
+            var avgPrice = ((share.Quantity * share.PurchasePrice) + (newShare.Quantity * newShare.PurchasePrice)) / (share.Quantity + newShare.Quantity);
 
-            share.Amount += newShare.Amount;
+            share.Quantity += newShare.Quantity;
             share.PurchasePrice = avgPrice;
         }
 
@@ -55,7 +55,7 @@ namespace WalletCore.Action
             UpdateShare(share, newShare);
         }
 
-        public async Task ExecuteAsync(BuyShare newShare, long cpf)
+        public async Task ExecuteAsync(BuyShare newShare, string cpf)
         {
             var wallet = await _walletDatabase.FindByCPFAsync(cpf);
 

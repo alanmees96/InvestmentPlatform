@@ -18,7 +18,7 @@ namespace WalletAPI.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private async Task<Wallet> FindWallet(long cpf)
+        private async Task<Wallet> FindWallet(string cpf)
         {
             var filter = Builders<Wallet>.Filter.Eq(x => x.Owner.CPF, cpf);
 
@@ -33,7 +33,7 @@ namespace WalletAPI.Controllers
             {
                 Owner = new Owner()
                 {
-                    CPF = 30279747349,
+                    CPF = "30279747349",
                     Name = "Ester Gabrielly Ribeiro"
                 },
                 Shares = new List<Share>()
@@ -77,19 +77,19 @@ namespace WalletAPI.Controllers
         public async Task<Wallet> Get()
         {
 
-            var cpf = 30279747349;
+            var cpf = "30279747349";
 
             var newShare = new Share()
             {
                 Symbol = "SANB11",
-                Amount = 3,
+                Quantity = 3,
                 PurchasePrice = 40.77
             };
 
             var newShares = new BuyShare()
             {
                 Symbol = "SANB11",
-                Amount = 3,
+                Quantity = 3,
                 PurchasePrice = 40.77
             };
 

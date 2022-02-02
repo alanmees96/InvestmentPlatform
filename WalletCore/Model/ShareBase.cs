@@ -4,14 +4,14 @@
     {
         public string Symbol { get; set; }
 
-        public int Amount { get; set; }
+        public int Quantity { get; set; }
 
         public double PurchasePrice { get; set; }
 
         public ShareBase(ShareBase share)
         {
             Symbol = share.Symbol;
-            Amount = share.Amount;
+            Quantity = share.Quantity;
             PurchasePrice = share.PurchasePrice;
         }
         public ShareBase() {}

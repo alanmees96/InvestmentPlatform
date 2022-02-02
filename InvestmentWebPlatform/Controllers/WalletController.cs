@@ -63,7 +63,7 @@ namespace InvestmentWebPlatform.Controllers
 
             try
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Home");
             }
             catch
             {
@@ -72,18 +72,43 @@ namespace InvestmentWebPlatform.Controllers
         }
 
         // GET: WalletController/Edit/5
-        public ActionResult AddShare(string symbol)
+        public ActionResult AddShare(string symbol, double price)
         {
+            var viewModel = new AddShareViewModel()
+            {
+                Symbol = symbol,
+                Price = price
+            };
 
-
-            return RedirectToAction(nameof(Index));
+            return View(viewModel);
         }
 
         // POST: WalletController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> AddShareAsync(AddShareViewModel payload)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var newShare = new AddSharePayload()
+            {
+                CPF = long.Parse(currentUser.CPF),
+                Quantity = payload.Quantity,
+                Symbol = payload.Symbol,
+                Price = payload.Price
+            };
+
+            var newShareJson = new StringContent(
+                JsonSerializer.Serialize(newShare),
+                Encoding.UTF8,
+                "application/json");
+
+            var client = new HttpClient();
+
+            var url = "http://localhost:5001/Wallet/AddShare";
+
+            await client.PostAsync(url, newShareJson);
+
             try
             {
                 return RedirectToAction(nameof(Index));

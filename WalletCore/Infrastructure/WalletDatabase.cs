@@ -19,7 +19,7 @@ namespace WalletCore.Infrastructure
             _database = database;
         }
 
-        public async Task<Wallet> FindByCPFAsync(long cpf)
+        public async Task<Wallet> FindByCPFAsync(string cpf)
         {
             var filter = Builders<Wallet>.Filter.Eq(x => x.Owner.CPF, cpf);
 

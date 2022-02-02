@@ -9,6 +9,6 @@ namespace WalletCore.Interface.Action
 {
     public interface IBuyShareAction
     {
-        public Task ExecuteAsync(BuyShare newShare, long cpf);
+        public Task ExecuteAsync(BuyShare newShare, string cpf);
     }
 }

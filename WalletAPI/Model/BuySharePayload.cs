@@ -10,6 +10,6 @@ namespace WalletAPI.Model
 
         public BuySharePayload() {}
 
-        public long CPF { get; set; }
+        public string CPF { get; set; }
     }
 }

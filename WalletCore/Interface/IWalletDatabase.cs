@@ -5,7 +5,7 @@ namespace WalletCore.Interface
 {
     public interface IWalletDatabase
     {
-        public Task<Wallet> FindByCPFAsync(long cpf);
+        public Task<Wallet> FindByCPFAsync(string cpf);
 
         public Task UpdateAsync(Wallet wallet);
     }

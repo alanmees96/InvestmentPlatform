@@ -2,7 +2,7 @@
 {
     public class Owner
     {
-        public long CPF { get; set; }
+        public string CPF { get; set; }
 
         public string Name { get; set; }
     }

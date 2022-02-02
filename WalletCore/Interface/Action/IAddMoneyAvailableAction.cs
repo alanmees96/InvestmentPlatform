@@ -4,6 +4,6 @@ namespace WalletCore.Interface.Action
 {
     public interface IAddMoneyAvailableAction
     {
-        public Task ExecuteAsync(long cpf, double newMoney);
+        public Task ExecuteAsync(string cpf, double newMoney);
     }
 }

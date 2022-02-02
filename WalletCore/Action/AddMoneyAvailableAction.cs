@@ -13,7 +13,7 @@ namespace WalletCore.Action
             _walletDatabase = walletDatabase;
         }
 
-        public async Task ExecuteAsync(long cpf, double newMoney)
+        public async Task ExecuteAsync(string cpf, double newMoney)
         {
             var wallet = await _walletDatabase.FindByCPFAsync(cpf);
 
