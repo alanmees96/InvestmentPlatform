@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WalletCore.Model.Action;
+using WalletCore.Model.Response;
 
 namespace WalletCore.Interface.Action
 {
     public interface IBuyShareAction
     {
-        public Task ExecuteAsync(BuyShare newShare, string cpf);
+        public Task<ActionResponse> ExecuteAsync(BuyShare newShare, string cpf);
     }
 }

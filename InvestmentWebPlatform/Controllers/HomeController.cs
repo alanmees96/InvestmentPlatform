@@ -45,12 +45,23 @@ namespace InvestmentWebPlatform.Controllers
 
             var viewModel = new IndexViewModel() { Shares = shares };
 
+            if(TempData["AlertMessageType"] != null)
+            {
+                ViewBag.AlertMessageType = TempData["AlertMessageType"];
+                ViewBag.AlertMessageContent = TempData["AlertMessageContent"];
+
+                //TempData.Remove("AlertMessageContent");
+                //TempData.Remove("AlertMessageType");
+            }
+            
             return View(viewModel);
         }
 
         public IActionResult PrivacyAsync()
         {
             
+            ViewBag.AlertMessageType = "error";
+            ViewBag.AlertMessageContent = "Mensagem de Error!!";
 
             return View();
         }

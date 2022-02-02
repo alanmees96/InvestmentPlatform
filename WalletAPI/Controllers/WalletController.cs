@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using WalletAPI.Model;
 using WalletCore.Interface.Action;
 using WalletCore.Model.Action;
+using WalletCore.Model.Response;
 
 namespace WalletAPI.Controllers
 {
@@ -26,11 +27,26 @@ namespace WalletAPI.Controllers
 
         [HttpPost]
         [Route("AddShare")]
-        public async Task AddSharePost(BuySharePayload payload)
+        public async Task<ObjectResult> AddSharePost(BuySharePayload payload)
         {
             var newShare = new BuyShare(payload);
 
-            await _buyShareAction.ExecuteAsync(newShare, payload.CPF);
+            var actionResponse = await _buyShareAction.ExecuteAsync(newShare, payload.CPF);
+
+            if (actionResponse.HasError)
+            {
+                if(actionResponse.ErrorCode == (int) ErrorCode.InsufficientFunds)
+                {
+                    return BadRequest(actionResponse);
+                }
+
+                if (actionResponse.ErrorCode == (int)ErrorCode.WalletNotFound)
+                {
+                    return NotFound(actionResponse);
+                }
+            }
+
+            return Ok(actionResponse);
         }
 
         [HttpPost]

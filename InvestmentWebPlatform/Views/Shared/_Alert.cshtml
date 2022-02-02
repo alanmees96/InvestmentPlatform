@@ -1,0 +1,21 @@
+﻿
+@if (TempData["AlertMessageType"] != null)
+{
+    if (TempData["AlertMessageType"].ToString() == "success")
+    {
+        @:<div class="alert alert-success fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @TempData["AlertMessageContent"]
+        @:</div>
+    }
+    else if (TempData["AlertMessageType"].ToString() == "error")
+    {
+        @:<div class="alert alert-danger fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            @TempData["AlertMessageContent"]
+        @:</div>
+    }
+
+    TempData.Remove("AlertMessageContent");
+    TempData.Remove("AlertMessageType");
+}

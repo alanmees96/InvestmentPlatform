@@ -64,10 +64,13 @@ namespace InvestmentWebPlatform.Controllers
 
             var url = "http://localhost:5001/Wallet/AddMoney";
 
-            await client.PostAsync(url, addCashContent);
+            var response = await client.PostAsync(url, addCashContent);
 
             try
             {
+                TempData["AlertMessageType"] = "success";
+                TempData["AlertMessageContent"] = "Saldo adicionado com sucesso!";
+
                 return RedirectToAction(nameof(Index), "Home");
             }
             catch
@@ -112,7 +115,9 @@ namespace InvestmentWebPlatform.Controllers
 
             var url = "http://localhost:5001/Wallet/AddShare";
 
-            await client.PostAsync(url, newShareJson);
+            var response = await client.PostAsync(url, newShareJson);
+
+            //if(response.IsSuccessStatusCode)
 
             try
             {

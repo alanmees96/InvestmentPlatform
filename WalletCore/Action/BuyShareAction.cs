@@ -7,6 +7,7 @@ using WalletCore.Interface;
 using WalletCore.Interface.Action;
 using WalletCore.Model.Action;
 using WalletCore.Model.Database;
+using WalletCore.Model.Response;
 
 namespace WalletCore.Action
 {
@@ -69,20 +70,20 @@ namespace WalletCore.Action
             wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
         }
 
-        public async Task ExecuteAsync(BuyShare newShare, string cpf)
+        public async Task<ActionResponse> ExecuteAsync(BuyShare newShare, string cpf)
         {
             var wallet = await _walletDatabase.FindByCPFAsync(cpf);
 
             if(wallet == default)
             {
-                return; // TODO Carteira não encontrada
+                return new ErrorResponse(ErrorCode.WalletNotFound); 
             }
 
             var purchaseTotalShareValue = newShare.Quantity * newShare.PurchasePrice;
 
             if(purchaseTotalShareValue > wallet.MoneyAvailable)
             {
-                return;// TODO saldo insuficiente
+                return new ErrorResponse(ErrorCode.InsufficientFunds);
             }
 
             wallet.MoneyAvailable -= purchaseTotalShareValue;
@@ -90,6 +91,8 @@ namespace WalletCore.Action
             CalculateShare(wallet, newShare);
 
             await _walletDatabase.UpdateAsync(wallet);
+
+            return new DontHaveError();
         }
     }
 }
