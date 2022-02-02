@@ -15,7 +15,7 @@ namespace InvestmentWebPlatform.Controllers
 {
     public class WalletController : Controller
     {
-        private async Task<ActionResult> WalletResponseDefineView<T>(T payload, HttpResponseMessage walletResponseMessage)
+        private async Task<ActionResult> WalletResponseDefineView<T>(T payload, HttpResponseMessage walletResponseMessage, string successMessage)
         {
             var contentAsText = await walletResponseMessage.Content.ReadAsStringAsync();
 
@@ -30,7 +30,7 @@ namespace InvestmentWebPlatform.Controllers
             {
                 case HttpStatusCode.OK:
                     TempData["AlertMessageType"] = "success";
-                    TempData["AlertMessageContent"] = "Saldo adicionado com sucesso!";
+                    TempData["AlertMessageContent"] = successMessage;
 
                     return RedirectToAction(nameof(Index), "Home");
 
@@ -107,7 +107,9 @@ namespace InvestmentWebPlatform.Controllers
             {
                 var response = await client.PostAsync(url, addCashContent);
 
-                return await WalletResponseDefineView(payload, response);
+                var successMessage = "Saldo adicionado com sucesso!";
+
+                return await WalletResponseDefineView(payload, response, successMessage);
             }
             catch
             {
@@ -158,7 +160,9 @@ namespace InvestmentWebPlatform.Controllers
             {
                 var response = await client.PostAsync(url, newShareJson);
 
-                return await WalletResponseDefineView(payload, response);
+                var successMessage = $"Ação {payload.Symbol} comparada com sucesso!";
+
+                return await WalletResponseDefineView(payload, response, successMessage);
             }
             catch
             {

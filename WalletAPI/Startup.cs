@@ -31,9 +31,9 @@ namespace WalletAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDatabase, MongoDBRepository>(x => new MongoDBRepository("mongodb+srv://ToroInvestimento:gTS34bx5B7szNXqf@toroteste.z1llg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", "Toro"));
+            services.AddSingleton<IDatabase, MongoDBRepository>(x => 
+                new MongoDBRepository(Configuration["MongoConnection"], Configuration["MongoDatabase"]));
             services.AddSingleton<IWalletDatabase, WalletDatabase>();
-
 
             services.AddSingleton<IBuyShareAction, BuyShareAction>();
             services.AddSingleton<ICreateWalletAction, CreateWalletAction>();
