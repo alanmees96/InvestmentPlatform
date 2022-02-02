@@ -16,7 +16,7 @@ namespace WalletCore.Action
                 return new ErrorResponse(ErrorCode.WalletNotFound);
             }
 
-            if (wallet.Owner.CPF == transferInfo.Origin.CPF)
+            if (wallet.Owner.CPF != transferInfo.Origin.CPF)
             {
                 return new ErrorResponse(ErrorCode.TransferCPFDoesntMatch);
             }

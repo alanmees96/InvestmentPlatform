@@ -8,13 +8,19 @@ namespace InvestmentWebPlatform.ViewModel
 {
     public class AddCashViewModel
     {
-        [Required]
-        [Display(Name = "Nome")]
-        public string Name { get; set; }
+        public string AccountNumber { get; set; }
 
         [Required]
-        [Display(Name = "CPF")]
-        public string CPF { get; set; }
+        [Display(Name = "Banco de Origem")]
+        public string OriginBank { get; set; }
+
+        [Required]
+        [Display(Name = "Agencia de origem")]
+        public string OriginBranch { get; set; }
+
+        [Required]
+        [Display(Name = "CPF do remetente")]
+        public string OriginCPFOwner { get; set; }
 
         [Required]
         [Display(Name = "Valor")]

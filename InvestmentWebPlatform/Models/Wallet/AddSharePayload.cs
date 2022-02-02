@@ -2,7 +2,7 @@
 {
     public class AddSharePayload
     {
-        public string CPF { get; set; }
+        public string AccountNumber { get; set; }
 
         public int Quantity { get; set; }
 

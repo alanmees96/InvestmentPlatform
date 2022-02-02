@@ -35,15 +35,12 @@ namespace WalletAPI.Controllers
 
             if (actionResponse.HasError)
             {
-                if(actionResponse.ErrorCode == (int) ErrorCode.InsufficientFunds)
-                {
-                    return BadRequest(actionResponse);
-                }
-
                 if (actionResponse.ErrorCode == (int)ErrorCode.WalletNotFound)
                 {
                     return NotFound(actionResponse);
                 }
+
+                return BadRequest(actionResponse);
             }
 
             return Ok(actionResponse);
@@ -61,6 +58,8 @@ namespace WalletAPI.Controllers
                 {
                     return NotFound(actionResponse);
                 }
+
+                return BadRequest(actionResponse);
             }
 
             return Ok(actionResponse);

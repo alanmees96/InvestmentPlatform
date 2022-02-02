@@ -1,5 +1,6 @@
 ﻿using InvestmentWebPlatform.Models;
 using InvestmentWebPlatform.Models.Wallet;
+using InvestmentWebPlatform.Models.Wallet.AddMoneyPayload;
 using InvestmentWebPlatform.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -62,8 +63,7 @@ namespace InvestmentWebPlatform.Controllers
 
             var cashView = new AddCashViewModel()
             {
-                CPF = currentUser.CPF,
-                Name = currentUser.Name
+                AccountNumber = currentUser.AccountNumber.ToString()
             };
 
             return View(cashView);
@@ -74,10 +74,22 @@ namespace InvestmentWebPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddCashAsync(AddCashViewModel payload)
         {
-            var addCash = new AddMoneyPayload()
+            var addCash = new AddWalletMoneyPayload()
             {
-                CPF = payload.CPF,
-                Value = payload.Value
+                Event = "TRANSFER",
+                Origin = new OriginInfo()
+                {
+                    Bank = payload.OriginBank,
+                    Branch = payload.OriginBranch,
+                    CPF = payload.OriginCPFOwner
+                },
+                Target = new TargetInfo()
+                {
+                    Bank = "352",
+                    Branch = "0001",
+                    Account = payload.AccountNumber
+                },
+                Amount = payload.Value
             };
 
             var addCashJson = JsonSerializer.Serialize(addCash);
@@ -127,7 +139,7 @@ namespace InvestmentWebPlatform.Controllers
 
             var newShare = new AddSharePayload()
             {
-                CPF = currentUser.CPF,
+                AccountNumber = currentUser.AccountNumber.ToString(),
                 Quantity = payload.Quantity,
                 Symbol = payload.Symbol,
                 PurchasePrice = payload.Price

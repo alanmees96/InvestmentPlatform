@@ -24,7 +24,7 @@ namespace WalletCore.Action
                 {
                     CPF = walletPayload.CPF,
                     Name = walletPayload.Name,
-                    AccountNumber = walletPayload.Name
+                    AccountNumber = walletPayload.AccountNumber
                 },
                 Shares = new List<Share>()
             };

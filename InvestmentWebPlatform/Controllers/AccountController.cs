@@ -37,7 +37,8 @@ namespace InvestmentWebPlatform.Controllers
             var wallet = new CreateWalletPayload()
             {
                 CPF = user.CPF,
-                Name = user.Name
+                Name = user.Name,
+                AccountNumber = user.AccountNumber.ToString()
             };
 
             var newShareJson = new StringContent(
@@ -66,6 +67,7 @@ namespace InvestmentWebPlatform.Controllers
                     Email = model.Email,
                     EmailConfirmed = true
                 };
+
                 var result = await userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -124,9 +126,7 @@ namespace InvestmentWebPlatform.Controllers
                 if (result.Succeeded)
                 {
                     await userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));
-                    await userManager.AddClaimAsync(user, new Claim("CPF", user.CPF));
                     
-
                     return RedirectToAction("Index", "Home");
                 }
                 else
