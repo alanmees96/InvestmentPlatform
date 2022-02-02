@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WalletAPI.Model;
 using WalletCore.Interface.Action;
@@ -15,13 +12,16 @@ namespace WalletAPI.Controllers
     {
         private readonly IBuyShareAction _buyShareAction;
         private readonly IAddMoneyAvailableAction _addMoneyAvailableAction;
+        private readonly ICreateWalletAction _createWalletAction;
 
         public WalletController(
             IBuyShareAction buyShareAction,
-            IAddMoneyAvailableAction addMoneyAvailableAction)
+            IAddMoneyAvailableAction addMoneyAvailableAction,
+            ICreateWalletAction createWalletAction)
         {
             _buyShareAction = buyShareAction;
             _addMoneyAvailableAction = addMoneyAvailableAction;
+            _createWalletAction = createWalletAction;
         }
 
         [HttpPost]
@@ -37,7 +37,14 @@ namespace WalletAPI.Controllers
         [Route("AddMoney")]
         public async Task AddMoneyPost(AddMoneyPayload payload)
         {
-            await _addMoneyAvailableAction.ExecuteAsync(payload.CPF, payload.value);
+            await _addMoneyAvailableAction.ExecuteAsync(payload.CPF, payload.Value);
+        }
+
+        [HttpPost]
+        [Route("Create")]
+        public async Task CreateWalletPost(CreateWalletPayload payload)
+        {
+            await _createWalletAction.ExecuteAsync(payload.CPF, payload.Name);
         }
     }
 }

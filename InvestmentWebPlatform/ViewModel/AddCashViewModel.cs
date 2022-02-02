@@ -14,7 +14,7 @@ namespace InvestmentWebPlatform.ViewModel
 
         [Required]
         [Display(Name = "CPF")]
-        public long CPF { get; set; }
+        public string CPF { get; set; }
 
         [Required]
         [Display(Name = "Valor")]

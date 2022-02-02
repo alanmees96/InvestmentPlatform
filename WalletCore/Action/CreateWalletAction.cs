@@ -1,12 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using WalletCore.Interface;
+using WalletCore.Interface.Action;
+using WalletCore.Model.Database;
 
 namespace WalletCore.Action
 {
-    public class CreateWalletAction
+    public class CreateWalletAction : ICreateWalletAction
     {
+        private readonly IWalletDatabase _walletDatabase;
+
+        public CreateWalletAction(IWalletDatabase walletDatabase)
+        {
+            _walletDatabase = walletDatabase;
+        }
+
+        public async Task ExecuteAsync(string name, string cpf)
+        {
+            var newWallet = new Wallet()
+            {
+                Owner = new Owner()
+                {
+                    CPF = "30279747349",
+                    Name = "Ester Gabrielly Ribeiro"
+                },
+                Shares = new List<Share>()
+            };
+
+            await _walletDatabase.InsertAsync(newWallet);
+        }
     }
 }

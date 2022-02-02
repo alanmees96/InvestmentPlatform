@@ -32,7 +32,7 @@ namespace InvestmentWebPlatform.Controllers
 
             var cashView = new AddCashViewModel()
             {
-                CPF = long.Parse(currentUser.CPF),
+                CPF = currentUser.CPF,
                 Name = currentUser.Name
             };
 
@@ -44,14 +44,19 @@ namespace InvestmentWebPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddCashAsync(AddCashViewModel collection)
         {
+
+            //var currentUser = await _userManager.GetUserAsync(User);
+
             var addCash = new AddMoneyPayload()
             {
                 CPF = collection.CPF,
                 Value = collection.Value
             };
 
-            var addCashJson = new StringContent(
-                JsonSerializer.Serialize(addCash),
+            var addCashJson = JsonSerializer.Serialize(addCash);
+
+            var addCashContent = new StringContent(
+                addCashJson,
                 Encoding.UTF8,
                 "application/json");
 
@@ -59,7 +64,7 @@ namespace InvestmentWebPlatform.Controllers
 
             var url = "http://localhost:5001/Wallet/AddMoney";
 
-            await client.PostAsync(url, addCashJson);
+            await client.PostAsync(url, addCashContent);
 
             try
             {
@@ -92,10 +97,10 @@ namespace InvestmentWebPlatform.Controllers
 
             var newShare = new AddSharePayload()
             {
-                CPF = long.Parse(currentUser.CPF),
+                CPF = currentUser.CPF,
                 Quantity = payload.Quantity,
                 Symbol = payload.Symbol,
-                Price = payload.Price
+                PurchasePrice = payload.Price
             };
 
             var newShareJson = new StringContent(
@@ -111,7 +116,7 @@ namespace InvestmentWebPlatform.Controllers
 
             try
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), "Home");
             }
             catch
             {
@@ -119,25 +124,5 @@ namespace InvestmentWebPlatform.Controllers
             }
         }
 
-        // GET: WalletController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: WalletController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

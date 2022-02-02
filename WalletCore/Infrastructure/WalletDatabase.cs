@@ -32,5 +32,10 @@ namespace WalletCore.Infrastructure
         {
             await _database.UpdateAsync(x => x.Owner.CPF.Equals(wallet.Owner.CPF), wallet);
         }
+
+        public async Task InsertAsync(Wallet wallet)
+        {
+            await _database.InsertAsync(wallet);
+        }
     }
 }

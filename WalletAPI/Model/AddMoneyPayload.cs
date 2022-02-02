@@ -9,6 +9,6 @@ namespace WalletAPI.Model
     {
         public string CPF { get; set; }
 
-        public double value { get; set; }
+        public double Value { get; set; }
     }
 }

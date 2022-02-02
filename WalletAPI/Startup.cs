@@ -36,6 +36,7 @@ namespace WalletAPI
 
 
             services.AddSingleton<IBuyShareAction, BuyShareAction>();
+            services.AddSingleton<ICreateWalletAction, CreateWalletAction>();
             services.AddSingleton<IAddMoneyAvailableAction, AddMoneyAvailableAction>();
 
             services.AddControllers();

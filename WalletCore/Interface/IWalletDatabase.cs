@@ -8,5 +8,7 @@ namespace WalletCore.Interface
         public Task<Wallet> FindByCPFAsync(string cpf);
 
         public Task UpdateAsync(Wallet wallet);
+
+        public Task InsertAsync(Wallet wallet);
     }
 }
