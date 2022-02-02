@@ -12,24 +12,20 @@ namespace StockExchange.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class StockExchangeController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<StockExchangeController> _logger;
         private readonly IDatabase _database;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IDatabase database)
+        public StockExchangeController(ILogger<StockExchangeController> logger, IDatabase database)
         {
             _logger = logger;
             _database = database;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Share>> GetAsync()
+        [Route("Trend")]
+        public async Task<IEnumerable<Share>> TrendAsync()
         {
             var teste = new ShareWorker(_database);
 

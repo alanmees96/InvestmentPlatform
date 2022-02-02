@@ -92,9 +92,12 @@ namespace InvestmentWebPlatform.Controllers
 
                 var result = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
 
+
                 if (result.Succeeded)
                 {
                     await userManager.AddClaimAsync(user, new Claim("UserRole", "Admin"));
+                    await userManager.AddClaimAsync(user, new Claim("CPF", user.CPF));
+                    
 
                     return RedirectToAction("Index", "Home");
                 }

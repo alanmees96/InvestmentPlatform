@@ -39,10 +39,5 @@ namespace WalletAPI.Controllers
         {
             await _addMoneyAvailableAction.ExecuteAsync(payload.CPF, payload.value);
         }
-
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
     }
 }

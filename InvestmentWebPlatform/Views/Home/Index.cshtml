@@ -1,8 +1,42 @@
-﻿@{
+﻿@model InvestmentWebPlatform.ViewModel.IndexViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+
+<div class="container">
+    <div class="row">
+        <table class="table arrowes-table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var share in Model.Shares)
+                {
+                    <tr>
+                        <td>@share.Symbol</td>
+                        <td>
+                            @share.CurrentPrice
+                        </td>
+                        <td>
+                            <a class="nav-link" 
+                               asp-controller="Wallet" 
+                               asp-action="AddShare" 
+                               asp-route-symbol="@share.Symbol"
+                               asp-route-price="@share.CurrentPrice">Comprar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
