@@ -1,4 +1,5 @@
 ﻿using InvestmentWebPlatform.Models;
+using InvestmentWebPlatform.Models.Wallet;
 using InvestmentWebPlatform.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -6,7 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace InvestmentWebPlatform.Controllers
@@ -28,6 +32,26 @@ namespace InvestmentWebPlatform.Controllers
             return View();
         }
 
+        private async Task CreateWallet(ApplicationUser user)
+        {
+            var wallet = new CreateWalletPayload()
+            {
+                CPF = user.CPF,
+                Name = user.Name
+            };
+
+            var newShareJson = new StringContent(
+                JsonSerializer.Serialize(wallet),
+                Encoding.UTF8,
+                "application/json");
+
+            var client = new HttpClient();
+
+            var url = "http://localhost:5001/Wallet/Create";
+
+            await client.PostAsync(url, newShareJson);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -45,6 +69,9 @@ namespace InvestmentWebPlatform.Controllers
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, isPersistent: false);
+
+                    await CreateWallet(user);
+
                     return RedirectToAction("Index", "Home");
                 }
 

@@ -44,7 +44,7 @@ namespace WalletAPI.Controllers
         [Route("Create")]
         public async Task CreateWalletPost(CreateWalletPayload payload)
         {
-            await _createWalletAction.ExecuteAsync(payload.CPF, payload.Name);
+            await _createWalletAction.ExecuteAsync(payload.Name, payload.CPF);
         }
     }
 }

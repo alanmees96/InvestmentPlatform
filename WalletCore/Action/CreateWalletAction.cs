@@ -21,8 +21,8 @@ namespace WalletCore.Action
             {
                 Owner = new Owner()
                 {
-                    CPF = "30279747349",
-                    Name = "Ester Gabrielly Ribeiro"
+                    CPF = cpf,
+                    Name = name
                 },
                 Shares = new List<Share>()
             };
