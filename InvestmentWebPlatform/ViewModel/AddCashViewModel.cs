@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace InvestmentWebPlatform.ViewModel
 {
     public class AddCashViewModel
     {
         public string AccountNumber { get; set; }
-
-        public string TargetCPF { get; set; }
 
         [Required]
         [Display(Name = "Banco de Origem")]
@@ -24,6 +18,7 @@ namespace InvestmentWebPlatform.ViewModel
         [Display(Name = "CPF do remetente")]
         public string OriginCPFOwner { get; set; }
 
+        public string TargetCPF { get; set; }
         [Required]
         [Display(Name = "Valor")]
         public double Value { get; set; }

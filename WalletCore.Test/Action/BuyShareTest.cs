@@ -200,6 +200,7 @@ namespace WalletCore.Test.Action
 
             #endregion Assert
         }
+
         [Fact]
         public async Task Should_Update_Share_In_Wallet_When_Already_Exists()
         {

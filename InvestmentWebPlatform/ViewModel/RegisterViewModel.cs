@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace InvestmentWebPlatform.ViewModel
 {
     public class RegisterViewModel
     {
         [Required]
-        [Display(Name = "Nome")]
-        public string Name { get; set; }
+        [Display(Name = "Confirm Password")]
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Your password and confirm password do not match")]
+        public string ConfirmPassword { get; set; }
 
         [Required]
         [Display(Name = "CPF")]
@@ -21,13 +19,10 @@ namespace InvestmentWebPlatform.ViewModel
         public string Email { get; set; }
 
         [Required]
+        [Display(Name = "Nome")]
+        public string Name { get; set; }
+        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-        [Required]
-        [Display(Name = "Confirm Password")]
-        [DataType(DataType.Password)]
-        [Compare("Password", ErrorMessage = "Your password and confirm password do not match")]
-        public string ConfirmPassword { get; set; }
     }
 }

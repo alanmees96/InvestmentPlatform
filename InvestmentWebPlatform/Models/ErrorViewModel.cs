@@ -1,5 +1,3 @@
-using System;
-
 namespace InvestmentWebPlatform.Models
 {
     public class ErrorViewModel

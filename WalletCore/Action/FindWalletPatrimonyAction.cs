@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using WalletCore.Interface;
 using WalletCore.Interface.Action;
 using WalletCore.Model.Response;
@@ -12,11 +8,6 @@ namespace WalletCore.Action
     public class FindWalletPatrimonyAction : IFindWalletPatrimonyAction
     {
         private readonly IWalletDatabase _walletDatabase;
-
-        public FindWalletPatrimonyAction(IWalletDatabase walletDatabase)
-        {
-            _walletDatabase = walletDatabase;
-        }
 
         public async Task<WalletPatrimonyResponse> ExecuteAsync(string accountNumber)
         {
@@ -35,6 +26,11 @@ namespace WalletCore.Action
             };
 
             return response;
+        }
+
+        public FindWalletPatrimonyAction(IWalletDatabase walletDatabase)
+        {
+            _walletDatabase = walletDatabase;
         }
     }
 }

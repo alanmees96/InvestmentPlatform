@@ -12,6 +12,7 @@ namespace InvestmentWebPlatform.Service
         }
 
         protected abstract string BaseUrl();
+
         protected async Task<TResult> GetAsync<TResult>(string action)
         {
             var urlRequest = FormUrl(action);

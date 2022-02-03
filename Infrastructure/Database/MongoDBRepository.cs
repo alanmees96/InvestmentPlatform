@@ -35,8 +35,8 @@ namespace Infrastructure.Database
         {
             var collection = GetCollection<TDocument>();
 
-            var  result = await collection.FindAsync(filter, options);
-            
+            var result = await collection.FindAsync(filter, options);
+
             return result.ToEnumerable();
         }
 

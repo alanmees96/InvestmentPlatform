@@ -1,9 +1,7 @@
 ﻿using Infrastructure.Interface;
 using MongoDB.Driver;
 using StockExchange.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace StockExchange.Core

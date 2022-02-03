@@ -3,9 +3,7 @@ using InvestmentWebPlatform.Service;
 using InvestmentWebPlatform.ViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace InvestmentWebPlatform.Controllers
@@ -13,11 +11,16 @@ namespace InvestmentWebPlatform.Controllers
     public class HomeController : Controller
     {
         private readonly StockExchangeService _stockService;
-        private readonly WalletService _walletService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly WalletService _walletService;
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
 
         public HomeController(
-            UserManager<ApplicationUser> userManager,
+                    UserManager<ApplicationUser> userManager,
             StockExchangeService stockService,
             WalletService walletService)
         {
@@ -49,12 +52,6 @@ namespace InvestmentWebPlatform.Controllers
             };
 
             return View(viewModel);
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

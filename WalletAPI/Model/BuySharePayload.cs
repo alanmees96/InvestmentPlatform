@@ -8,7 +8,8 @@ namespace WalletAPI.Model
         {
         }
 
-        public BuySharePayload() {}
+        public BuySharePayload()
+        { }
 
         public string AccountNumber { get; set; }
     }

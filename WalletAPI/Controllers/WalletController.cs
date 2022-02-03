@@ -35,25 +35,6 @@ namespace WalletAPI.Controllers
             return Ok(actionResponse);
         }
 
-        [HttpGet]
-        [Route("FndWalletPatrimony")]
-        public async Task<ObjectResult> FindWalletPatrimonyGET(string accountNumber)
-        {
-            var actionResponse = await _findWalletPatrimonyAction.ExecuteAsync(accountNumber);
-
-            if (actionResponse.ActionResponse.HasError)
-            {
-                if (actionResponse.ActionResponse.ErrorCode == (int)ErrorCode.WalletNotFound)
-                {
-                    return NotFound(actionResponse);
-                }
-
-                return BadRequest(actionResponse);
-            }
-
-            return Ok(actionResponse);
-        }
-
         [HttpPost]
         [Route("AddShare")]
         public async Task<ObjectResult> AddSharePost(BuySharePayload payload)
@@ -89,6 +70,24 @@ namespace WalletAPI.Controllers
             await _createWalletAction.ExecuteAsync(walletPayload);
         }
 
+        [HttpGet]
+        [Route("FndWalletPatrimony")]
+        public async Task<ObjectResult> FindWalletPatrimonyGET(string accountNumber)
+        {
+            var actionResponse = await _findWalletPatrimonyAction.ExecuteAsync(accountNumber);
+
+            if (actionResponse.ActionResponse.HasError)
+            {
+                if (actionResponse.ActionResponse.ErrorCode == (int)ErrorCode.WalletNotFound)
+                {
+                    return NotFound(actionResponse);
+                }
+
+                return BadRequest(actionResponse);
+            }
+
+            return Ok(actionResponse);
+        }
         public WalletController(
                                             IAddMoneyAvailableAction addMoneyAvailableAction,
             IBuyShareAction buyShareAction,

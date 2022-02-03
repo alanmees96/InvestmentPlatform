@@ -11,11 +11,6 @@ namespace WalletCore.Infrastructure
     {
         private readonly IDatabase _database;
 
-        public WalletDatabase(IDatabase database)
-        {
-            _database = database;
-        }
-
         public async Task<Wallet> FindByAccountNumberAsync(string accountNumber)
         {
             var filter = Builders<Wallet>.Filter.Eq(x => x.Owner.AccountNumber, accountNumber);
@@ -25,14 +20,19 @@ namespace WalletCore.Infrastructure
             return wallets.FirstOrDefault();
         }
 
+        public async Task InsertAsync(Wallet wallet)
+        {
+            await _database.InsertAsync(wallet);
+        }
+
         public async Task UpdateAsync(Wallet wallet)
         {
             await _database.UpdateAsync(x => x.Owner.AccountNumber.Equals(wallet.Owner.AccountNumber), wallet);
         }
 
-        public async Task InsertAsync(Wallet wallet)
+        public WalletDatabase(IDatabase database)
         {
-            await _database.InsertAsync(wallet);
+            _database = database;
         }
     }
 }
