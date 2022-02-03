@@ -19,80 +19,167 @@ namespace WalletCore.Action
         {
             _walletDatabase = walletDatabase;
         }
+        private async Task<Wallet> FindWallet(string accountNumber)
+        {
+            return await _walletDatabase.FindByAccountNumberAsync(accountNumber);
+        }
 
-        private Share BuildShare(BuyShare newShare)
+        private async Task<BuyShareContext> CreateBuyShareContext(BuyShare newShare, string accountNumber)
+        {
+            var wallet = await FindWallet(accountNumber);
+
+            var context = new BuyShareContext(wallet, newShare);
+
+            return context;
+        }
+
+        private ActionResponse Validation(BuyShareContext context)
+        {
+            if (context.CurrentWallet == default)
+            {
+                return new ErrorResponse(ErrorCode.WalletNotFound);
+            }
+
+            if (context.HasFundsToThisOperation())
+            {
+                return new ErrorResponse(ErrorCode.InsufficientFunds);
+            }
+
+            return new DontHaveError();
+        }
+
+        private Share BuildShare(BuyShareContext context)
         {
             var share = new Share()
             {
-                Quantity = newShare.Quantity,
-                PurchasePrice = newShare.PurchasePrice,
-                Symbol = newShare.Symbol
+                Quantity = context.NewShare.Quantity,
+                PurchasePrice = context.NewShare.PurchasePrice,
+                Symbol = context.NewShare.Symbol
             };
 
             return share;
         }
 
-        private void CalculateAVGPrice(Share share, BuyShare newShare)
+        //private void CalculateAVGPrice(Share share, BuyShareContext context)
+        //{
+        //    var currentTotalShareValue = share.Quantity * share.PurchasePrice;
+        //    var totalQuantityOperation = share.Quantity + context.Quantity;
+
+        //    var avgPrice = (currentTotalShareValue + context.PurchaseTotalShareValue) / totalQuantityOperation;
+
+        //    share.Quantity += context.Quantity;
+        //    share.PurchasePrice = avgPrice;
+        //}
+
+        private double CalculateAVGPrice(BuyShareContext context)
         {
-            var currentTotalShareValue = share.Quantity * share.PurchasePrice;
-            var purchaseTotalShareValue = newShare.Quantity * newShare.PurchasePrice;
+            var currentTotalShareValue = context.CurrentShare.Quantity * context.CurrentShare.PurchasePrice;
+            var totalQuantityOperation = context.CurrentShare.Quantity + context.NewShare.Quantity;
 
-            var totalQuantityOperation = share.Quantity + newShare.Quantity;
+            var avgPrice = (currentTotalShareValue + context.PurchaseTotalShareValue) / totalQuantityOperation;
 
-            var avgPrice = (currentTotalShareValue + purchaseTotalShareValue) / totalQuantityOperation;
-
-            
-            share.Quantity += newShare.Quantity;
-            share.PurchasePrice = avgPrice;
+            return avgPrice;
         }
 
-        private void CalculateShare(Wallet wallet, BuyShare newShare)
+        private void CalculateShare(Wallet wallet, BuyShareContext context)
         {
-            var share = wallet.Shares.FirstOrDefault(x => x.Symbol.Equals(newShare.Symbol));
+            //var share = wallet.Shares.FirstOrDefault(x => x.Symbol.Equals(context.Symbol));
 
-            if (share == default)
+            //if (share == default)
+            //{
+            //    share = BuildShare(context);
+
+            //    wallet.Shares.Add(share);
+
+            //    wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
+
+            //    return;
+            //}
+
+            //var currentTotalShareValue = share.Quantity * share.PurchasePrice;
+
+            //wallet.MoneyInvested -= currentTotalShareValue;
+
+            //CalculateAVGPrice(share, context);
+
+            //wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
+        }
+
+        private void DeductBuyShareFromMoneyAvailable(BuyShareContext context)
+        {
+            context.CurrentWallet.MoneyAvailable -= context.PurchaseTotalShareValue;
+        }
+
+        private void UpdateMoneyInvested(Wallet wallet, Share share)
+        {
+            wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
+        }
+
+        private Share AddNewShareInWallet(BuyShareContext context)
+        {
+            var share = BuildShare(context);
+
+            context.CurrentWallet.Shares.Add(share);
+
+            return share;
+        }
+
+        public void RemoveOldValuationMoneyInvested(BuyShareContext context)
+        {
+            context.CurrentWallet.MoneyInvested -= context.CurrentShare.Quantity * context.CurrentShare.PurchasePrice;
+        }
+
+        public void UpdateCurrentShare(BuyShareContext context, double avgPrice)
+        {
+            context.CurrentShare.PurchasePrice = avgPrice;
+            context.CurrentShare.Quantity += context.NewShare.Quantity;
+        }
+
+        public void UpdateWalletShareAlreadyExists(BuyShareContext context, double avgPrice)
+        {
+            RemoveOldValuationMoneyInvested(context);
+
+            UpdateCurrentShare(context, avgPrice);
+
+            UpdateMoneyInvested(context.CurrentWallet, context.CurrentShare);
+        }
+
+        private void UpdateSharesInWallet(BuyShareContext context)
+        {
+            DeductBuyShareFromMoneyAvailable(context);
+
+            if (context.IsNeedCreateShareInWalletShares())
             {
-                share = BuildShare(newShare);
+                var newShare = AddNewShareInWallet(context);
 
-                wallet.Shares.Add(share);
-
-                wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
+                UpdateMoneyInvested(context.CurrentWallet, newShare);
 
                 return;
             }
 
-            var currentTotalShareValue = share.Quantity * share.PurchasePrice;
+            var avgPrice = CalculateAVGPrice(context);
 
-            wallet.MoneyInvested -= currentTotalShareValue;
-
-            CalculateAVGPrice(share, newShare);
-
-            wallet.MoneyInvested += share.Quantity * share.PurchasePrice;
+            UpdateWalletShareAlreadyExists(context, avgPrice);
         }
 
         public async Task<ActionResponse> ExecuteAsync(BuyShare newShare, string accountNumber)
         {
-            var wallet = await _walletDatabase.FindByAccountNumberAsync(accountNumber);
+            var context = await CreateBuyShareContext(newShare, accountNumber);
 
-            if(wallet == default)
+            var response = Validation(context);
+
+            if(response.HasError)
             {
-                return new ErrorResponse(ErrorCode.WalletNotFound); 
+                return response; 
             }
 
-            var purchaseTotalShareValue = newShare.Quantity * newShare.PurchasePrice;
+            //wallet.MoneyAvailable -= purchaseTotalShareValue;
 
-            if(purchaseTotalShareValue > wallet.MoneyAvailable)
-            {
-                return new ErrorResponse(ErrorCode.InsufficientFunds);
-            }
+            UpdateSharesInWallet(context);
 
-            wallet.MoneyAvailable -= purchaseTotalShareValue;
+            await _walletDatabase.UpdateAsync(context.CurrentWallet);
 
-            CalculateShare(wallet, newShare);
-
-            await _walletDatabase.UpdateAsync(wallet);
-
-            return new DontHaveError();
+            return response;
         }
     }
 }

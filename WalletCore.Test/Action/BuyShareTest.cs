@@ -131,7 +131,8 @@ namespace WalletCore.Test.Action
                     CPF = Consts.CPF,
                     Name = Consts.Name
                 },
-                MoneyAvailable = 5
+                MoneyAvailable = 5,
+                Shares = new List<Share>()
             };
 
             walletDatabaseMock.Setup(x => x.FindByAccountNumberAsync(Consts.AccountNumber)).ReturnsAsync(wallet);
