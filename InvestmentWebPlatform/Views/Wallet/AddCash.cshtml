@@ -19,6 +19,9 @@
         <div>
             <label class="control-label">Número da conta: @Model.AccountNumber</label>
         </div>
+        <div>
+            <label class="control-label">CPF da conta: @Model.TargetCPF</label>
+        </div>
     </div>
 
     <div class="col-md-1"></div>
@@ -27,7 +30,8 @@
         <h2>Transferencia bancaria</h2>
         <form asp-action="AddCash">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @Html.HiddenFor(x => x.AccountNumber);
+            @Html.HiddenFor(x => x.AccountNumber)
+            @Html.HiddenFor(x => x.TargetCPF)
             <div class="form-group">
                 <label asp-for="OriginBank" class="control-label"></label>
                 <input asp-for="OriginBank" class="form-control" />

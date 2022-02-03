@@ -64,7 +64,8 @@ namespace InvestmentWebPlatform.Controllers
 
             var cashView = new AddCashViewModel()
             {
-                AccountNumber = currentUser.AccountNumber.ToString()
+                AccountNumber = currentUser.AccountNumber.ToString(),
+                TargetCPF = currentUser.CPF
             };
 
             return View(cashView);
@@ -138,7 +139,7 @@ namespace InvestmentWebPlatform.Controllers
             {
                 var response = await _walletService.AddShareAsync(newShare);
 
-                var successMessage = $"Ação {payload.Symbol} comparada com sucesso!";
+                var successMessage = $"Ação {payload.Symbol} comprada com sucesso!";
 
                 return await WalletResponseDefineView(payload, response, successMessage);
             }

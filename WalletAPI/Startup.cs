@@ -2,16 +2,10 @@ using Infrastructure.Database;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WalletCore.Action;
 using WalletCore.Infrastructure;
 using WalletCore.Interface;
@@ -30,13 +24,14 @@ namespace WalletAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDatabase, MongoDBRepository>(x => 
+            services.AddSingleton<IDatabase, MongoDBRepository>(x =>
                 new MongoDBRepository(Configuration["MongoConnection"], Configuration["MongoDatabase"]));
             services.AddSingleton<IWalletDatabase, WalletDatabase>();
 
+            services.AddSingleton<IAddMoneyAvailableAction, AddMoneyAvailableAction>();
             services.AddSingleton<IBuyShareAction, BuyShareAction>();
             services.AddSingleton<ICreateWalletAction, CreateWalletAction>();
-            services.AddSingleton<IAddMoneyAvailableAction, AddMoneyAvailableAction>();
+            services.AddSingleton<IFindWalletPatrimonyAction, FindWalletPatrimonyAction>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

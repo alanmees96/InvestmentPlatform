@@ -1,0 +1,54 @@
+﻿@model InvestmentWebPlatform.ViewModel.PatrimonyViewModel
+
+@{
+    ViewData["Title"] = "Patrimônio";
+}
+<h1>@ViewData["Title"]</h1>
+
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div>
+                <h3>Saldo em Conta: @Model.MoneyAvailable</h3>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <h3>Patrimônio estimado em: @Model.Patrimony</h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <table class="table arrowes-table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th>Valor médio de compra</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var share in Model.Shares)
+                {
+                    <tr>
+                        <td>@share.Symbol</td>
+                        <td>
+                            @share.Quantity
+                        </td>
+                        <td>
+                            R$ @share.AVGPurchasePrice
+                        </td>
+                        <td>
+                            R$ @(share.AVGPurchasePrice * share.Quantity)
+                       </td>
+
+                   </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

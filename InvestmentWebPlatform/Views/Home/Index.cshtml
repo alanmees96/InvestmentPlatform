@@ -1,13 +1,13 @@
-﻿@model InvestmentWebPlatform.ViewModel.IndexViewModel
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model InvestmentWebPlatform.ViewModel.IndexViewModel
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Ações mais vendidas";
 }
 
-@*<div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    </div>*@
+<h1>@ViewData["Title"]</h1>
 
 <div class="container">
     <div class="row">
@@ -16,6 +16,11 @@
                 <tr>
                     <th>Nome</th>
                     <th>Valor</th>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <th></th>
+                    }
+
                 </tr>
             </thead>
 
@@ -27,13 +32,17 @@
                         <td>
                             @share.CurrentPrice
                         </td>
-                        <td>
-                            <a class="nav-link" 
-                               asp-controller="Wallet" 
-                               asp-action="AddShare" 
-                               asp-route-symbol="@share.Symbol"
-                               asp-route-price="@share.CurrentPrice">Comprar</a>
-                        </td>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <td>
+                                <a class="nav-link"
+                                   asp-controller="Wallet"
+                                   asp-action="AddShare"
+                                   asp-route-symbol="@share.Symbol"
+                                   asp-route-price="@share.CurrentPrice">Comprar</a>
+                            </td>
+                        }
+                        
                     </tr>
                 }
             </tbody>

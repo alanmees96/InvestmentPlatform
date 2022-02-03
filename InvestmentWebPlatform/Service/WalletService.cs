@@ -31,6 +31,13 @@ namespace InvestmentWebPlatform.Service
             return response;
         }
 
+        public async Task<WalletPatrimonyResponse> GetPatrimonyAsync(string accountNumber)
+        {
+            var trendShares = await GetAsync<WalletPatrimonyResponse>($"/FndWalletPatrimony?accountNumber={accountNumber}");
+
+            return trendShares;
+        }
+
         public WalletService(HttpClient client) : base(client)
         { }
     }

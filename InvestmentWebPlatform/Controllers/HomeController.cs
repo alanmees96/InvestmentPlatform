@@ -1,6 +1,7 @@
 ﻿using InvestmentWebPlatform.Models;
 using InvestmentWebPlatform.Service;
 using InvestmentWebPlatform.ViewModel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
@@ -11,15 +12,18 @@ namespace InvestmentWebPlatform.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly StockExchangeService _stockService;
+        private readonly WalletService _walletService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger,
-            IHttpClientFactory clientFactory,
-            StockExchangeService stockService)
+        public HomeController(
+            UserManager<ApplicationUser> userManager,
+            StockExchangeService stockService,
+            WalletService walletService)
         {
-            _logger = logger;
+            _userManager = userManager;
             _stockService = stockService;
+            _walletService = walletService;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -31,9 +35,20 @@ namespace InvestmentWebPlatform.Controllers
             return View(viewModel);
         }
 
-        public IActionResult PrivacyAsync()
+        public async Task<IActionResult> PatrimonyAsync()
         {
-            return View();
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            var patrimonyResponse = await _walletService.GetPatrimonyAsync(currentUser.AccountNumber.ToString());
+
+            var viewModel = new PatrimonyViewModel()
+            {
+                MoneyAvailable = patrimonyResponse.MoneyAvailable,
+                Patrimony = patrimonyResponse.Patrimony,
+                Shares = patrimonyResponse.Shares
+            };
+
+            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

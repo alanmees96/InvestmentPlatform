@@ -10,6 +10,8 @@ namespace InvestmentWebPlatform.ViewModel
     {
         public string AccountNumber { get; set; }
 
+        public string TargetCPF { get; set; }
+
         [Required]
         [Display(Name = "Banco de Origem")]
         public string OriginBank { get; set; }

@@ -11,27 +11,16 @@ namespace WalletAPI.Controllers
     [Route("[controller]")]
     public class WalletController : ControllerBase
     {
-        private readonly IBuyShareAction _buyShareAction;
         private readonly IAddMoneyAvailableAction _addMoneyAvailableAction;
+        private readonly IBuyShareAction _buyShareAction;
         private readonly ICreateWalletAction _createWalletAction;
-
-        public WalletController(
-            IBuyShareAction buyShareAction,
-            IAddMoneyAvailableAction addMoneyAvailableAction,
-            ICreateWalletAction createWalletAction)
-        {
-            _buyShareAction = buyShareAction;
-            _addMoneyAvailableAction = addMoneyAvailableAction;
-            _createWalletAction = createWalletAction;
-        }
+        private readonly IFindWalletPatrimonyAction _findWalletPatrimonyAction;
 
         [HttpPost]
-        [Route("AddShare")]
-        public async Task<ObjectResult> AddSharePost(BuySharePayload payload)
+        [Route("AddMoney")]
+        public async Task<ObjectResult> AddMoneyPost(AddMoneyPayload payload)
         {
-            var newShare = new BuyShare(payload);
-
-            var actionResponse = await _buyShareAction.ExecuteAsync(newShare, payload.AccountNumber);
+            var actionResponse = await _addMoneyAvailableAction.ExecuteAsync(payload);
 
             if (actionResponse.HasError)
             {
@@ -46,11 +35,32 @@ namespace WalletAPI.Controllers
             return Ok(actionResponse);
         }
 
-        [HttpPost]
-        [Route("AddMoney")]
-        public async Task<ObjectResult> AddMoneyPost(AddMoneyPayload payload)
+        [HttpGet]
+        [Route("FndWalletPatrimony")]
+        public async Task<ObjectResult> FindWalletPatrimonyGET(string accountNumber)
         {
-            var actionResponse = await _addMoneyAvailableAction.ExecuteAsync(payload);
+            var actionResponse = await _findWalletPatrimonyAction.ExecuteAsync(accountNumber);
+
+            if (actionResponse.ActionResponse.HasError)
+            {
+                if (actionResponse.ActionResponse.ErrorCode == (int)ErrorCode.WalletNotFound)
+                {
+                    return NotFound(actionResponse);
+                }
+
+                return BadRequest(actionResponse);
+            }
+
+            return Ok(actionResponse);
+        }
+
+        [HttpPost]
+        [Route("AddShare")]
+        public async Task<ObjectResult> AddSharePost(BuySharePayload payload)
+        {
+            var newShare = new BuyShare(payload);
+
+            var actionResponse = await _buyShareAction.ExecuteAsync(newShare, payload.AccountNumber);
 
             if (actionResponse.HasError)
             {
@@ -77,6 +87,18 @@ namespace WalletAPI.Controllers
             };
 
             await _createWalletAction.ExecuteAsync(walletPayload);
+        }
+
+        public WalletController(
+                                            IAddMoneyAvailableAction addMoneyAvailableAction,
+            IBuyShareAction buyShareAction,
+            ICreateWalletAction createWalletAction,
+            IFindWalletPatrimonyAction findWalletPatrimonyAction)
+        {
+            _addMoneyAvailableAction = addMoneyAvailableAction;
+            _buyShareAction = buyShareAction;
+            _createWalletAction = createWalletAction;
+            _findWalletPatrimonyAction = findWalletPatrimonyAction;
         }
     }
 }

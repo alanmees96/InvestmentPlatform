@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvestmentWebPlatform", "InvestmentWebPlatform.csproj", "{13178A5F-5767-4A9E-A8D1-897957E5F792}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvestmentWebPlatform", "InvestmentWebPlatform.csproj", "{13178A5F-5767-4A9E-A8D1-897957E5F792}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "..\Common\Common.csproj", "{CACFB2BD-CDD4-4D67-9EF4-E6AA08EC3261}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{13178A5F-5767-4A9E-A8D1-897957E5F792}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13178A5F-5767-4A9E-A8D1-897957E5F792}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13178A5F-5767-4A9E-A8D1-897957E5F792}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CACFB2BD-CDD4-4D67-9EF4-E6AA08EC3261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CACFB2BD-CDD4-4D67-9EF4-E6AA08EC3261}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CACFB2BD-CDD4-4D67-9EF4-E6AA08EC3261}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CACFB2BD-CDD4-4D67-9EF4-E6AA08EC3261}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

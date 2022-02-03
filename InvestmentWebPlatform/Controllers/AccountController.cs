@@ -1,4 +1,5 @@
-﻿using InvestmentWebPlatform.Models;
+﻿using Common.Extension;
+using InvestmentWebPlatform.Models;
 using InvestmentWebPlatform.Models.Wallet;
 using InvestmentWebPlatform.Service;
 using InvestmentWebPlatform.ViewModel;
@@ -59,7 +60,7 @@ namespace InvestmentWebPlatform.Controllers
                 var user = new ApplicationUser
                 {
                     Name = model.Name,
-                    CPF = model.CPF,
+                    CPF = model.CPF.OnlyNumbers(),
                     UserName = model.Email,
                     Email = model.Email,
                     EmailConfirmed = true
