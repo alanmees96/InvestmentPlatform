@@ -19,7 +19,7 @@ namespace WalletCore.Model.Action
             CurrentWallet = currentWalet;
             NewShare = newShare;
 
-            PurchaseTotalShareValue = newShare.Quantity * newShare.PurchasePrice;
+            PurchaseTotalShareValue = newShare.Quantity * newShare.AVGPurchasePrice;
             
             if(currentWalet != null)
             {

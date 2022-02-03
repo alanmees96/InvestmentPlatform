@@ -6,7 +6,7 @@
 
         public int Quantity { get; set; }
 
-        public double PurchasePrice { get; set; }
+        public double AVGPurchasePrice { get; set; }
 
         public string Symbol { get; set; }
     }

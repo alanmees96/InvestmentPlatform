@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using System.Collections.Generic;
+using WalletCore.Extension;
 
 namespace WalletCore.Model.Database
 {
@@ -9,9 +10,17 @@ namespace WalletCore.Model.Database
 
         public Owner Owner { get; set; }
 
-        public double MoneyAvailable { get; set; }
+        public double MoneyAvailable 
+        { 
+            get => MoneyAvailable; 
+            set => MoneyAvailable = value.CurrencyRound(); 
+        }
 
-        public double MoneyInvested { get; set; }
+        public double MoneyInvested 
+        { 
+            get => MoneyInvested; 
+            set => MoneyInvested = value.CurrencyRound(); 
+        }
 
         public List<Share> Shares { get; set; }
     }

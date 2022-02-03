@@ -34,7 +34,7 @@ namespace WalletCore.Test.Action
 
             var expectedSharedInWallet = new Share()
             {
-                PurchasePrice = 20,
+                AVGPurchasePrice = 20,
                 Quantity = 2,
                 Symbol = "TORO4"
             };
@@ -42,7 +42,7 @@ namespace WalletCore.Test.Action
 
             var buyShare = new BuyShare()
             {
-                PurchasePrice = 20,
+                AVGPurchasePrice = 20,
                 Quantity = 2,
                 Symbol = "TORO4"
             };
@@ -100,7 +100,7 @@ namespace WalletCore.Test.Action
 
             var newShare = updatedWallet.Shares.First();
 
-            Assert.Equal(expectedSharedInWallet.PurchasePrice, newShare.PurchasePrice);
+            Assert.Equal(expectedSharedInWallet.AVGPurchasePrice, newShare.AVGPurchasePrice);
             Assert.Equal(expectedSharedInWallet.Quantity, newShare.Quantity);
             Assert.Equal(expectedSharedInWallet.Symbol, newShare.Symbol);
 
@@ -116,7 +116,7 @@ namespace WalletCore.Test.Action
 
             var buyShare = new BuyShare()
             {
-                PurchasePrice = 20,
+                AVGPurchasePrice = 20,
                 Quantity = 2,
                 Symbol = "TORO4"
             };
@@ -170,7 +170,7 @@ namespace WalletCore.Test.Action
 
             var buyShare = new BuyShare()
             {
-                PurchasePrice = 20,
+                AVGPurchasePrice = 20,
                 Quantity = 2,
                 Symbol = "TORO4"
             };
@@ -221,7 +221,7 @@ namespace WalletCore.Test.Action
 
             var expectedSharedInWallet = new Share()
             {
-                PurchasePrice = 30,
+                AVGPurchasePrice = 30,
                 Quantity = 4,
                 Symbol = "TORO4"
             };
@@ -242,7 +242,7 @@ namespace WalletCore.Test.Action
 
             var currentSharedInWallet = new Share()
             {
-                PurchasePrice = 20,
+                AVGPurchasePrice = 20,
                 Quantity = 2,
                 Symbol = "TORO4"
             };
@@ -264,7 +264,7 @@ namespace WalletCore.Test.Action
 
             var buyShare = new BuyShare()
             {
-                PurchasePrice = 40,
+                AVGPurchasePrice = 40,
                 Quantity = 2,
                 Symbol = "TORO4"
             };
@@ -295,7 +295,7 @@ namespace WalletCore.Test.Action
 
             var newShare = updatedWallet.Shares.First();
 
-            Assert.Equal(expectedSharedInWallet.PurchasePrice, newShare.PurchasePrice);
+            Assert.Equal(expectedSharedInWallet.AVGPurchasePrice, newShare.AVGPurchasePrice);
             Assert.Equal(expectedSharedInWallet.Quantity, newShare.Quantity);
             Assert.Equal(expectedSharedInWallet.Symbol, newShare.Symbol);
 
