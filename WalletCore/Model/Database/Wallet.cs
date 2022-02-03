@@ -10,16 +10,19 @@ namespace WalletCore.Model.Database
 
         public Owner Owner { get; set; }
 
+        private double _moneyAvailable;
+
         public double MoneyAvailable 
         { 
-            get => MoneyAvailable; 
-            set => MoneyAvailable = value.CurrencyRound(); 
+            get => _moneyAvailable; 
+            set => _moneyAvailable = value.CurrencyRound(); 
         }
 
+        private double _moneyInvested;
         public double MoneyInvested 
         { 
-            get => MoneyInvested; 
-            set => MoneyInvested = value.CurrencyRound(); 
+            get => _moneyInvested; 
+            set => _moneyInvested = value.CurrencyRound(); 
         }
 
         public List<Share> Shares { get; set; }

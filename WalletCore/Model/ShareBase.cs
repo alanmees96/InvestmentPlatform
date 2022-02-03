@@ -7,11 +7,11 @@ namespace WalletCore.Model
         public string Symbol { get; set; }
 
         public int Quantity { get; set; }
-
+        private double _avgPurchasePrice;
         public double AVGPurchasePrice 
         { 
-            get => AVGPurchasePrice; 
-            set => AVGPurchasePrice = value.CurrencyRound(); 
+            get => _avgPurchasePrice; 
+            set => _avgPurchasePrice = value.CurrencyRound(); 
         }
 
         public ShareBase(ShareBase share)

@@ -131,7 +131,7 @@ namespace InvestmentWebPlatform.Controllers
                 AccountNumber = currentUser.AccountNumber.ToString(),
                 Quantity = payload.Quantity,
                 Symbol = payload.Symbol,
-                PurchasePrice = payload.Price
+                AVGPurchasePrice = payload.Price
             };
 
             try
